@@ -1,3 +1,3 @@
-rootProject.name = "TVBox"
+rootProject.name = "TV----Box"
 include ':app'
 include ':player'
