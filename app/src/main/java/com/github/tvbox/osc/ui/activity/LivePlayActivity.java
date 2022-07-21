@@ -115,8 +115,6 @@ public class LivePlayActivity extends BaseActivity {
         initSettingItemView();
         initLiveChannelList();
         initLiveSettingGroupList();
-        showTime();
-        showNetSpeed();
     }
 
     @Override
@@ -172,6 +170,23 @@ public class LivePlayActivity extends BaseActivity {
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mVideoView != null) {
+            mVideoView.resume();
+        }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mVideoView != null) {
+            mVideoView.pause();
+        }
     }
 
     @Override
@@ -386,6 +401,7 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
+                        liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
                 });
                 animator.start();
@@ -825,6 +841,8 @@ public class LivePlayActivity extends BaseActivity {
         }
 
         livePlayerManager.init(mVideoView);
+        showTime();
+        showNetSpeed();
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
 
@@ -917,6 +935,7 @@ public class LivePlayActivity extends BaseActivity {
     private Runnable mUpdateNetSpeedRun = new Runnable() {
         @Override
         public void run() {
+            if (mVideoView == null) return;
             tvNetSpeed.setText(String.format("%.2fMB/s", (float)mVideoView.getTcpSpeed() / 1024.0 / 1024.0));
             mHandler.postDelayed(this, 1000);
         }
